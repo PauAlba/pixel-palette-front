@@ -36,17 +36,34 @@ export function ProfileView({ profile, theme, editable, onUpdated }: {
   const [favs, setFavs] = useState((profile.favorite_artists ?? []).join(", "));
 
   useEffect(() => {
+    setT(theme);
+  }, [theme]);
+
+  useEffect(() => {
     void (async () => {
       try {
-        const [postsRes, gbRes] = await Promise.all([
+        const [postsRes, gbRes, followersRes] = await Promise.all([
           apiFetch<any>(`/profiles/${profile.username}/posts`).catch(()=>([])),
           apiFetch<any[]>(`/guestbook/${profile.username}`).catch(()=>([])),
+          apiFetch<any>(`/profiles/${profile.username}/followers?limit=100`).catch(()=>({ data: [] })),
         ]);
         setPosts((postsRes.posts || postsRes.data?.posts || postsRes.data || postsRes || []) as any);
         setGuest(Array.isArray(gbRes) ? gbRes : gbRes?.data || []);
-        // Followers not implemented in backend yet, using 0
-        setFollowers(0); setFollowing(0);
-        setIFollow(false);
+        
+        // Initialize counts from profile
+        setFollowers((profile as any).followers_count || 0); 
+        setFollowing((profile as any).following_count || 0);
+        
+        if (user && user.id !== profile.id) {
+          const followersList = followersRes.data || followersRes.followers || Array.isArray(followersRes) ? followersRes : [];
+          // Check if current user is in the followers list
+          const isFollowing = followersList.some((f: any) => 
+            f.follower_id === user.id || f.id === user.id || f.follower_username === user.user_metadata?.username
+          );
+          setIFollow(isFollowing);
+        } else {
+          setIFollow(false);
+        }
       } catch (err) {
         console.error(err);
       }
@@ -54,14 +71,29 @@ export function ProfileView({ profile, theme, editable, onUpdated }: {
   }, [profile.id, profile.username, user]);
 
   async function toggleFollow() {
-    if (!user) return;
-    toast.error("Follow functionality not implemented in backend yet.");
+    if (!user) return toast.error("You must be logged in to follow users.");
+    try {
+      if (iFollow) {
+        await apiFetch(`/followers/${profile.username}`, { method: "DELETE" });
+        setIFollow(false);
+        setFollowers((prev) => Math.max(0, prev - 1));
+        toast.success(`Unfollowed @${profile.username}`);
+      } else {
+        await apiFetch(`/followers/${profile.username}`, { method: "POST" });
+        setIFollow(true);
+        setFollowers((prev) => prev + 1);
+        toast.success(`Followed @${profile.username}`);
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to toggle follow status");
+    }
   }
 
   async function saveEdit(e: React.FormEvent) {
     e.preventDefault();
     const favArr = favs.split(",").map(s=>s.trim()).filter(Boolean);
     try {
+      localStorage.setItem(`theme_${p.username}`, JSON.stringify(t));
       await apiFetch(`/profiles/me`, {
         method: "PATCH",
         body: JSON.stringify({
@@ -204,7 +236,7 @@ export function ProfileView({ profile, theme, editable, onUpdated }: {
                 {posts.length === 0 ? (
                   <p className="p-3 text-sm">no posts yet.</p>
                 ) : (
-                  <div className="space-y-3">{posts.map(po => <PostCard key={po.id} post={po}/>)}</div>
+                  <div className="space-y-3">{posts.map(po => <PostCard key={po.id} post={{...po, author_username: profile.username, author_display_name: profile.display_name, author_avatar_url: profile.avatar_url} as FeedPost}/>)}</div>
                 )}
               </div>
             </div>

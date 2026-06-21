@@ -19,7 +19,7 @@ function GlobalGuestbook() {
   useEffect(() => {
     void (async () => {
       try {
-        const response = await apiFetch<any>(`/guestbook/${user?.username || 'pixel_user'}`);
+        const response = await apiFetch<any>("/guestbook?limit=40");
         setEntries(Array.isArray(response) ? response : response.data || response.guestbook || []);
       } catch (err) {
         setEntries([]);

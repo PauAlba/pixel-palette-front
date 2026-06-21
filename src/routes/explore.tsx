@@ -13,14 +13,18 @@ function Explore() {
   const { data: artists } = useQuery({
     queryKey: ["explore-artists", q],
     queryFn: async () => {
-      // Fallback search since we don't have a /profiles list API yet
-      const allArtists = [
-        { id: "1", username: "pixel_user", display_name: "Pixel User", avatar_url: null, mood: "happy", bio: "Loves pixel art" },
-        { id: "2", username: "art_lover", display_name: "Art Lover", avatar_url: null, mood: "inspired", bio: "Creating daily" },
-        { id: "3", username: "retro_kid", display_name: "Retro Kid", avatar_url: null, mood: "nostalgic", bio: "90s vibes" },
-      ];
-      if (!q) return allArtists;
-      return allArtists.filter(a => a.username.toLowerCase().includes(q.toLowerCase()));
+      try {
+        const response = await apiFetch<any>("/profiles?limit=50");
+        let allArtists = response.data?.rows || response.data || response || [];
+        if (!Array.isArray(allArtists)) allArtists = [];
+        if (!q) return allArtists;
+        return allArtists.filter((a: any) => 
+          a.username?.toLowerCase().includes(q.toLowerCase()) || 
+          a.display_name?.toLowerCase().includes(q.toLowerCase())
+        );
+      } catch (err) {
+        return [];
+      }
     },
   });
 

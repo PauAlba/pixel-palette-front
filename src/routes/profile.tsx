@@ -23,7 +23,12 @@ function MyProfile() {
         apiFetch<any>(`/themes/${user.username}`).catch(() => null),
       ]);
       setProfile(pRes);
-      setTheme(tRes || { custom_css: "", background_pattern: "none" });
+      let finalTheme = tRes || { custom_css: "", background_pattern: "none" };
+      try {
+        const local = localStorage.getItem(`theme_${user.username}`);
+        if (local) finalTheme = { ...finalTheme, ...JSON.parse(local) };
+      } catch (e) {}
+      setTheme(finalTheme);
     } catch (e) {
       console.error(e);
     }

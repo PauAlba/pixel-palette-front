@@ -27,8 +27,14 @@ function UserPage() {
       if (!p) { setMissing(true); return; }
       
       const t = await apiFetch<any>(`/themes/${username}`).catch(() => ({ custom_css: "", background_pattern: "none" }));
+      let finalTheme = t || { custom_css: "", background_pattern: "none" };
+      try {
+        const local = localStorage.getItem(`theme_${username}`);
+        if (local) finalTheme = { ...finalTheme, ...JSON.parse(local) };
+      } catch (e) {}
+      
       setProfile(p); 
-      setTheme(t);
+      setTheme(finalTheme);
     } catch (e) {
       setMissing(true);
     }
