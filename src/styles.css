@@ -1,0 +1,206 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+/* ============================================================
+   ☆ GLITTERWEB ★ Y2K / scene / webcore design system
+   ============================================================ */
+
+@theme inline {
+  --font-display: "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive;
+  --font-body: Verdana, Tahoma, Geneva, sans-serif;
+  --font-mono: "Courier New", Courier, monospace;
+
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --color-paper: var(--paper);
+  --color-paper-foreground: var(--paper-fg);
+  --color-primary: var(--hot);
+  --color-primary-foreground: var(--hot-fg);
+  --color-secondary: var(--cyan);
+  --color-secondary-foreground: var(--cyan-fg);
+  --color-accent: var(--lime);
+  --color-accent-foreground: var(--lime-fg);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-fg);
+  --color-card: var(--paper);
+  --color-card-foreground: var(--paper-fg);
+  --color-popover: var(--paper);
+  --color-popover-foreground: var(--paper-fg);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--hot);
+  --color-destructive: oklch(0.6 0.25 27);
+  --color-destructive-foreground: #fff;
+  --color-link: var(--link);
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+}
+
+:root {
+  /* core scene palette */
+  --bg: #ffd6ec;
+  --fg: #2a0a3a;
+  --paper: #ffffff;
+  --paper-fg: #1b063b;
+  --hot: #ff2bb1;
+  --hot-fg: #ffffff;
+  --cyan: #2af1ff;
+  --cyan-fg: #04143a;
+  --lime: #b6ff3c;
+  --lime-fg: #0c2a00;
+  --muted: #f6e3ff;
+  --muted-fg: #6a3a8a;
+  --border: #ff2bb1;
+  --input: #ffffff;
+  --link: #1414ff;
+  --shadow-hot: 4px 4px 0 #2a0a3a;
+}
+
+.dark {
+  --bg: #0b0014;
+  --fg: #ffd9f3;
+  --paper: #1a0628;
+  --paper-fg: #ffe8fa;
+  --hot: #ff3eb5;
+  --hot-fg: #100018;
+  --cyan: #00e6ff;
+  --cyan-fg: #001022;
+  --lime: #c8ff00;
+  --lime-fg: #0c1a00;
+  --muted: #210840;
+  --muted-fg: #c79be8;
+  --border: #ff3eb5;
+  --input: #1a0628;
+  --link: #7df9ff;
+  --shadow-hot: 4px 4px 0 #ff3eb5;
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  html, body, #root { min-height: 100%; }
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,.45) 0 2px, transparent 3px),
+      radial-gradient(circle at 70% 60%, rgba(255,43,177,.25) 0 2px, transparent 3px),
+      radial-gradient(circle at 40% 80%, rgba(42,241,255,.25) 0 2px, transparent 3px);
+    background-size: 24px 24px, 36px 36px, 48px 48px;
+  }
+  a { color: var(--link); text-decoration: underline; }
+  a:hover { color: var(--hot); }
+  h1, h2, h3 { font-family: var(--font-display); letter-spacing: .02em; }
+}
+
+/* ☆ Reusable Y2K bits ☆ */
+@layer components {
+  .y2k-panel {
+    background: var(--paper);
+    color: var(--paper-fg);
+    border: 2px solid var(--fg);
+    box-shadow: var(--shadow-hot);
+    border-radius: 4px;
+  }
+  .y2k-titlebar {
+    background: linear-gradient(180deg, #ff86d1 0%, #ff2bb1 50%, #c81f8c 100%);
+    color: #fff;
+    border-bottom: 2px solid var(--fg);
+    padding: 4px 10px;
+    font-family: var(--font-body);
+    font-weight: bold;
+    font-size: 12px;
+    text-shadow: 1px 1px 0 rgba(0,0,0,.4);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .y2k-titlebar.blue {
+    background: linear-gradient(180deg, #6ec8ff 0%, #1a73e8 55%, #0a45a3 100%);
+  }
+  .y2k-titlebar.lime {
+    background: linear-gradient(180deg, #e6ff80 0%, #b6ff3c 55%, #6cc400 100%);
+    color: #1a2a00;
+    text-shadow: none;
+  }
+  .y2k-button {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: linear-gradient(180deg, #fff 0%, #ffd6ec 100%);
+    color: var(--fg);
+    border: 2px solid var(--fg);
+    box-shadow: 2px 2px 0 var(--fg);
+    padding: 6px 12px;
+    font-family: var(--font-body);
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: transform .05s ease;
+  }
+  .y2k-button:hover { background: linear-gradient(180deg, #fff 0%, #ffb6e1 100%); }
+  .y2k-button:active { transform: translate(2px,2px); box-shadow: none; }
+  .y2k-button.hot {
+    background: linear-gradient(180deg, #ff86d1, #ff2bb1);
+    color: #fff;
+  }
+  .y2k-button.cyan {
+    background: linear-gradient(180deg, #b6f6ff, #2af1ff);
+    color: #04143a;
+  }
+  .y2k-input {
+    background: #fff;
+    color: var(--fg);
+    border: 2px inset #c89edc;
+    padding: 4px 8px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    border-radius: 2px;
+    width: 100%;
+  }
+  .y2k-link { color: var(--link); text-decoration: underline; }
+  .y2k-link:hover { color: var(--hot); }
+  .y2k-blink { animation: y2k-blink 1s steps(2, start) infinite; }
+  .y2k-marquee {
+    overflow: hidden; white-space: nowrap;
+    border: 2px solid var(--fg); background: #000; color: var(--lime);
+    font-family: var(--font-mono);
+  }
+  .y2k-marquee span { display: inline-block; padding-left: 100%; animation: y2k-marquee 22s linear infinite; }
+  .y2k-chip {
+    display: inline-block;
+    background: var(--cyan);
+    color: var(--cyan-fg);
+    border: 1.5px solid var(--fg);
+    padding: 1px 6px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    border-radius: 999px;
+    margin: 1px;
+  }
+  .y2k-stamp {
+    display: inline-block;
+    border: 2px dashed var(--hot);
+    color: var(--hot);
+    padding: 2px 6px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    transform: rotate(-4deg);
+  }
+  .pattern-hearts { background-image: radial-gradient(circle at 10px 10px, #ff86d1 3px, transparent 4px); background-size: 22px 22px; }
+  .pattern-stars  { background-image: radial-gradient(circle at 8px 8px, #fff7a8 2px, transparent 3px), radial-gradient(circle at 18px 18px, #ff86d1 2px, transparent 3px); background-size: 26px 26px; }
+  .pattern-glitter{ background-image: radial-gradient(circle at 4px 4px, #fff 1.2px, transparent 1.6px), radial-gradient(circle at 14px 18px, #ffe066 1.2px, transparent 1.6px), radial-gradient(circle at 22px 6px, #2af1ff 1.2px, transparent 1.6px); background-size: 28px 28px; }
+  .pattern-leopard{ background-color: #f7c97a; background-image: radial-gradient(ellipse 6px 4px at 10px 10px, #3a1a00 60%, transparent 62%), radial-gradient(ellipse 4px 3px at 26px 22px, #3a1a00 60%, transparent 62%); background-size: 36px 32px; }
+  .pattern-checker{ background-image: linear-gradient(45deg, #ff2bb1 25%, transparent 25%), linear-gradient(-45deg, #ff2bb1 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ff2bb1 75%), linear-gradient(-45deg, transparent 75%, #ff2bb1 75%); background-size: 24px 24px; background-position: 0 0, 0 12px, 12px -12px, -12px 0; }
+  .pattern-stripes{ background-image: repeating-linear-gradient(45deg, #ff2bb1 0 10px, #ffd6ec 10px 20px); }
+  .pattern-grid   { background-image: linear-gradient(#ff2bb133 1px, transparent 1px), linear-gradient(90deg, #ff2bb133 1px, transparent 1px); background-size: 20px 20px; background-color: #000018; color: #aef; }
+  .pattern-none   { background-image: none; }
+}
+
+@keyframes y2k-blink { to { visibility: hidden; } }
+@keyframes y2k-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+@keyframes y2k-rainbow {
+  0%{filter:hue-rotate(0deg)} 100%{filter:hue-rotate(360deg)}
+}
+.y2k-rainbow { animation: y2k-rainbow 4s linear infinite; }
