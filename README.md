@@ -2,22 +2,6 @@
 
 > Una red social/blog artístico inspirada en la estética retro de internet de los años 2005–2008 (MySpace, LiveJournal, Tumblr viejo, DeviantArt, blogs DIY). Construida con TypeScript, React 19, Vite, TanStack Router y Tailwind CSS v4, conectada a un backend personalizado.
 
----
-
-## 📢 Aclaración Importante: Supabase y Git
-
-### 1. ¿La carpeta `supabase` ya no se ocupa?
-**Es correcto.** La carpeta `supabase/` (junto con `src/integrations/`) **ya no se utiliza**. Toda la aplicación se migró de las APIs de Supabase y Lovable Cloud a un **backend propio** (Node.js/Express con bases de datos PostgreSQL y MongoDB).
-
-### 2. ¿Por qué sigue apareciendo en Git/GitHub si ya se borró localmente?
-En tu máquina local, la carpeta `supabase` ya ha sido eliminada y estos cambios ya están confirmados en tus commits locales (como en el commit `0efb514: fixes, eliminacion de archivos innecesarios`). 
-
-Sin embargo, **sigue apareciendo en GitHub porque aún no has subido (pushed) tus commits locales al repositorio remoto**. Tu rama local está por delante de `origin/master` por 2 commits.
-
-Para solucionar esto y que la carpeta desaparezca de GitHub, ejecuta el siguiente comando en tu terminal dentro de la carpeta del proyecto:
-```bash
-git push origin master
-```
 
 ---
 
