@@ -24,7 +24,7 @@ function AuthPage() {
     setBusy(true);
     const { error } = mode === "signin"
       ? await signIn(email, password)
-      : await signUp(email, password, username || email.split("@")[0]);
+      : await signUp(email, password, username);
     setBusy(false);
     if (error) return toast.error(error);
     toast.success(mode === "signin" ? "welcome back ♡" : "account created — log in to begin");
@@ -43,7 +43,16 @@ function AuthPage() {
           {mode === "signup" && (
             <label className="block text-sm">
               <span className="font-bold">username</span>
-              <input className="y2k-input" value={username} onChange={(e)=>setUsername(e.target.value)} placeholder="cyber_kitty_2007"/>
+              <input 
+                className="y2k-input" 
+                required 
+                pattern="^[a-z0-9_]{3,20}$" 
+                title="3-20 characters. Lowercase letters, numbers, underscores only." 
+                value={username} 
+                onChange={(e)=>setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))} 
+                placeholder="cyber_kitty_2007"
+              />
+              <div className="text-[10px] text-muted-foreground mt-1">3-20 lowercase chars, numbers, underscores only.</div>
             </label>
           )}
           <label className="block text-sm">
@@ -52,7 +61,17 @@ function AuthPage() {
           </label>
           <label className="block text-sm">
             <span className="font-bold">password</span>
-            <input type="password" required minLength={6} className="y2k-input" value={password} onChange={(e)=>setPassword(e.target.value)} />
+            <input 
+              type="password" 
+              required 
+              minLength={mode === "signup" ? 8 : 1} 
+              pattern={mode === "signup" ? "^(?=.*[A-Z])(?=.*[0-9]).{8,}$" : undefined}
+              title={mode === "signup" ? "Password must be at least 8 characters, contain 1 uppercase letter and 1 number." : undefined}
+              className="y2k-input" 
+              value={password} 
+              onChange={(e)=>setPassword(e.target.value)} 
+            />
+            {mode === "signup" && <div className="text-[10px] text-muted-foreground mt-1">Min 8 chars, 1 uppercase, 1 number.</div>}
           </label>
           <button disabled={busy} className="y2k-button hot w-full justify-center" type="submit">
             {busy ? "loading…" : mode === "signin" ? "★ log in ★" : "★ create my page ★"}

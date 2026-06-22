@@ -69,7 +69,15 @@ export async function apiFetch<T = any>(endpoint: string, options: RequestInit =
     let errorMsg = 'An error occurred while fetching data';
     try {
       const errorData = await response.json();
-      errorMsg = errorData.error?.message || errorData.message || errorData.error || errorMsg;
+      if (errorData?.error?.fields) {
+        const fields = errorData.error.fields;
+        const messages = Object.entries(fields)
+          .map(([k, v]) => `${k}: ${(v as string[]).join(', ')}`)
+          .join(' | ');
+        errorMsg = `${errorData.error.message || 'Validation failed'}: ${messages}`;
+      } else {
+        errorMsg = errorData.error?.message || errorData.message || errorData.error || errorMsg;
+      }
       if (typeof errorMsg !== 'string') errorMsg = JSON.stringify(errorMsg);
     } catch {
       // If response is not JSON
