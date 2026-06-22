@@ -94,15 +94,26 @@ export function ProfileView({ profile, theme, editable, onUpdated }: {
     const favArr = favs.split(",").map(s=>s.trim()).filter(Boolean);
     try {
       localStorage.setItem(`theme_${p.username}`, JSON.stringify(t));
+      const profilePayload: any = {};
+      if (p.display_name) profilePayload.display_name = p.display_name;
+      if (p.bio) profilePayload.bio = p.bio;
+      if (p.mood) profilePayload.mood = p.mood;
+      if (p.avatar_url && p.avatar_url.startsWith('http')) profilePayload.avatar_url = p.avatar_url;
+      if (favArr.length > 0) profilePayload.favorite_artists = favArr;
+
       await apiFetch(`/profiles/me`, {
         method: "PATCH",
-        body: JSON.stringify({
-          display_name: p.display_name, bio: p.bio, mood: p.mood, avatar_url: p.avatar_url, favorite_artists: favArr,
-        })
+        body: JSON.stringify(profilePayload)
       });
+
+      const themePayload: any = {};
+      if (t.custom_css) themePayload.customCss = t.custom_css;
+      if (t.background_pattern) themePayload.backgroundPattern = t.background_pattern;
+      if (t.music_url && t.music_url.startsWith('http')) themePayload.musicUrl = t.music_url;
+
       await apiFetch(`/themes/me`, {
         method: "PUT",
-        body: JSON.stringify(t)
+        body: JSON.stringify(themePayload)
       });
     } catch (err: any) {
       return toast.error(err.message);
